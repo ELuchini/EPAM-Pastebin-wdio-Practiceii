@@ -1,9 +1,10 @@
 const { expect } = require("@wdio/globals");
 const HomePage = require("@pages/home.page");
+const PastePage = require("../po/pages/paste.page");
 const pasteText =
-  '\tgit config --global user.name  "New Sheriff in Town"\n' +
-  '\tgit reset $(git commit-tree HEAD^{tree} -m "Legacy code")\n' +
-  "\tgit push origin master --force";
+  'git config --global user.name  "New Sheriff in Town"\n' +
+  'git reset $(git commit-tree HEAD^{tree} -m "Legacy code")\n' +
+  "git push origin master --force";
 
 describe("Practice Form Test", () => {
   before(async () => {
@@ -14,22 +15,30 @@ describe("Practice Form Test", () => {
       "10 Minutes",
       "how to gain dominance among developers"
     );
+    await PastePage.open();
   });
 
   it("Expiration option should be 10 Minutes", async () => {
-    // await HomePage.pasteExpirationSelect.waitForDisplayed({ timeout: 3000 });
-    await $("div.info-bottom>div.expire").waitForExist({ timeout: 20000 });
-    await $("div.info-bottom>div.expire").waitForDisplayed({ timeout: 15000 });
-    await expect($$("div.info-bottom>div.expire")).toHaveValue("10 MIN");
+    await PastePage.pasteInfo.expire.waitForExist({ timeout: 3000 });
+    await PastePage.pasteInfo.expire.waitForDisplayed({ timeout: 3000 });
+    await expect(PastePage.pasteInfo.expire).toHaveText("10 MIN");
   });
 
-  // it("Title should be helloweb", async () => {
-  //   await expect(HomePage.pasteNameTitleInput).toHaveValue("helloweb");
-  // });
+  it("Sintax option should be bash", async () => {
+    await PastePage.pasteInfo.sintax.waitForExist({ timeout: 3000 });
+    await PastePage.pasteInfo.sintax.waitForDisplayed({ timeout: 3000 });
+    await expect(PastePage.pasteInfo.sintax).toHaveClass("bash");
+  });
 
-  // it("Code should be Hello from WebDriver", async () => {
-  //   await expect(HomePage.newPasteTextarea).toHaveValue("Hello from WebDriver");
-  // });
+  it("Title should be how to gain dominance among developers", async () => {
+    await expect(PastePage.pasteInfo.title).toHaveText(
+      "how to gain dominance among developers"
+    );
+  });
+
+  it("Code should be equal to pasteText", async () => {
+    await expect(PastePage.pasteInfo.code).toHaveText(pasteText);
+  });
 });
 
 // Please find the Task 2 description below and provide the link to your solution in the comment field.
